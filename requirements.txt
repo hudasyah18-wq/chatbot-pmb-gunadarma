@@ -1,0 +1,6 @@
+flask
+groq
+rank-bm25
+numpy
+python-dotenv
+gunicorn

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gunadarma AI — PMB Assistant 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<!-- POPUP NAMA -->
+<div id="name-overlay" class="name-overlay hidden">
+  <div class="name-popup">
+    <div class="name-popup-icon">🎓</div>
+    <div class="name-popup-title">Selamat Datang!</div>
+    <div class="name-popup-sub">Chatbot PMB Universitas Gunadarma 2026</div>
+    <div class="name-popup-label">Siapa nama kamu?</div>
+    <input id="name-input" class="name-popup-input" placeholder="Masukkan nama kamu..." maxlength="30" onkeypress="handleNameKey(event)">
+    <button class="name-popup-btn" onclick="saveName()">Mulai Chat ➤</button>
+  </div>
+</div>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="logo-area">
+      <div class="logo-icon">🎓</div>
+      <div>
+        <div class="logo-text">Gunadarma AI</div>
+        <div class="logo-sub">PMB Assistant 2026</div>
+      </div>
+    </div>
+
+    <button class="new-chat-btn" onclick="newChat()">
+      <div class="new-chat-icon">+</div>
+      Chat Baru
+    </button>
+
+    <div class="menu-label">Menu Cepat</div>
+
+    <div class="menu-item active" onclick="quickAsk('Apa itu PMB dan bagaimana cara daftar?')">
+      <div class="menu-icon" style="background:rgba(124,58,237,0.2)">📌</div>
+      <span class="menu-text">PMB & Pendaftaran</span>
+    </div>
+    <div class="menu-item" onclick="quickAsk('Apa saja beasiswa di Gunadarma?')">
+      <div class="menu-icon" style="background:rgba(52,211,153,0.15)">🎓</div>
+      <span class="menu-text">Info Beasiswa</span>
+    </div>
+    <div class="menu-item" onclick="quickAsk('Apa saja jurusan di Gunadarma?')">
+      <div class="menu-icon" style="background:rgba(96,165,250,0.15)">📚</div>
+      <span class="menu-text">Pilih Jurusan</span>
+    </div>
+    <div class="menu-item" onclick="quickAsk('Berapa biaya kuliah di Gunadarma?')">
+      <div class="menu-icon" style="background:rgba(251,191,36,0.15)">💰</div>
+      <span class="menu-text">Rincian Biaya</span>
+    </div>
+
+    <div class="menu-label" style="margin-top:8px">Tampilan</div>
+
+    <!-- DARK/LIGHT TOGGLE -->
+    <div class="theme-toggle-wrap">
+      <span class="theme-icon" id="theme-icon">🌙</span>
+      <span class="theme-label" id="theme-label">Dark Mode</span>
+      <div class="toggle-switch" id="theme-toggle" onclick="toggleTheme()">
+        <div class="toggle-knob" id="toggle-knob"></div>
+      </div>
+    </div>
+
+    <!-- INFO PENYIMPANAN CHAT -->
+    <div class="menu-label" style="margin-top:8px">Penyimpanan Chat</div>
+
+    <div class="storage-box">
+      <div class="storage-row">
+        <span id="storage-text">0 B dari 5 MB</span>
+        <span id="storage-percent">0%</span>
+      </div>
+      <div class="storage-bar">
+        <div class="storage-fill" id="storage-fill"></div>
+      </div>
+      <div class="storage-meta" id="storage-meta">0 pesan tersimpan di perangkat ini</div>
+      <button class="storage-clear" onclick="clearHistory()">🗑 Hapus riwayat</button>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-avatar-sm" id="sidebar-avatar">?</div>
+      <div style="flex:1;min-width:0">
+        <div class="user-label">Pengguna</div>
+        <div class="user-name" id="sidebar-name">Tamu</div>
+      </div>
+      <button class="edit-name-btn" onclick="editName()" title="Edit nama">✏️</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- HEADER -->
+    <div class="chat-header">
+      <div class="bot-avatar-header">
+        🤖
+        <div class="online-dot"></div>
+      </div>
+      <div class="header-info">
+        <div class="header-name">Gunadarma AI Assistant</div>
+        <div class="header-status">
+          <div class="status-dot"></div>
+          Online · Siap membantu 24/7
+        </div>
+      </div>
+      <div class="header-tag">PMB 2026</div>
+    </div>
+
+    <!-- CHATBOX -->
+    <div id="chatbox" class="chatbox">
+      <div class="date-divider">Mulai percakapan</div>
+      <div class="chat-row bot-row">
+        <div class="avatar bot-av">🤖</div>
+        <div class="msg-wrap">
+          <div class="msg-name">Gunadarma AI</div>
+          <div class="message bot-message" id="welcome-msg">
+            Halo! Selamat datang di Chatbot PMB Universitas Gunadarma 2026.<br><br>
+            Saya siap membantu menjawab pertanyaan kamu seputar pendaftaran, biaya kuliah, jurusan, dan beasiswa. Silakan mulai bertanya!
+            <div class="suggestion-chips">
+              <div class="chip" onclick="quickAsk('Bagaimana cara mendaftar PMB?')">Cara daftar</div>
+              <div class="chip" onclick="quickAsk('Berapa biaya kuliah di Gunadarma?')">Biaya kuliah</div>
+              <div class="chip" onclick="quickAsk('Apa saja beasiswa di Gunadarma?')">Beasiswa</div>
+              <div class="chip" onclick="quickAsk('Apa saja jurusan di Gunadarma?')">Jurusan</div>
+            </div>
+          </div>
+          <div class="msg-time">Sekarang</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INPUT AREA -->
+    <div class="input-area">
+      <div class="input-wrap">
+        <span class="input-icon">💬</span>
+        <input id="message" class="input-field" placeholder="Tanyakan seputar PMB Gunadarma 2026..." onkeypress="handleKey(event)">
+      </div>
+      <button class="send-btn" onclick="sendMessage()">➤</button>
+    </div>
+
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
